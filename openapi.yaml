@@ -1,0 +1,382 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get all orders
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+
+  /catalog:
+    get:
+      tags:
+        - Products
+      summary: Retrieve the catalog of products
+      description: Get information about available products.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+  /catalog/product/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get details of a product
+      description: Retrieve detailed information about a specific product.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the product.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+    put:
+      tags:
+        - Products
+      summary: Update a product
+      description: Edit details of a specific product.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the product.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                  description: The updated name of the product.
+                photo:
+                  type: string
+                  format: binary
+                  description: The updated photo of the product.
+                price_in_zloty:
+                  type: integer
+                  description: The updated price of the product in Polish zloty.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                message: "Product updated successfully"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating the success of the update.
+    delete:
+      summary: Delete a product
+      tags:
+        - Products
+      description: Remove a specific product from the catalog.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the product to be deleted.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No content
+          content:
+            application/json:
+              example:
+                message: "Product deleted successfully"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating the success of the deletion.
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              example:
+                message: "Product not found"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating that the product was not found.
+  /complaints:
+    get:
+      tags:
+        - Complaints
+      summary: Get all complaints
+      description: Retrieve information about all complaints.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Complaint'
+  /complaints/{id}:
+    get:
+      tags:
+        - Complaints
+      summary: Get details of a complaint
+      description: Retrieve detailed information about a specific complaint.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the complaint.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Complaint'
+
+  /complaint/{id}/manage:
+    post:
+      tags:
+        - Complaints
+      summary: Process a single complaint
+      description: Handle the resolution of an individual complaint.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the complaint to be processed.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accept:
+                  type: boolean
+                  description: Indicates whether the complaint is accepted or not.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                accept: true
+              schema:
+                type: object
+                properties:
+                  accept:
+                    type: boolean
+                    description: Indicates whether the complaint is accepted or not.
+  /complaint/{id}/chat/customer:
+    post:
+      tags:
+        - Complaints
+        - Chat
+      summary: Customer complaint chat
+      description: Send a message in the chat related to a specific complaint (sent by the customer).
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the complaint.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                message_text:
+                  type: string
+                  description: The text content of the message.
+                image:
+                  type: string
+                  format: binary
+                  nullable: true
+                  description: Binary data of an optional image attachment.
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              example:
+                message_id: 123
+              schema:
+                type: object
+                properties:
+                  message_id:
+                    type: integer
+                    description: The unique identifier for the sent message.
+  /complaint/{id}/chat/employee:
+    post:
+      tags:
+        - Complaints
+        - Chat
+      summary: Employee complaint chat
+      description: Send a message in the chat related to a specific complaint (sent by an employee).
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the complaint.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message_text:
+                  type: string
+                  description: The text content of the message.
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              example:
+                message_id: 456
+              schema:
+                type: object
+                properties:
+                  message_id:
+                    type: integer
+                    description: The unique identifier for the sent message.
+
+  /complaint/{id}/chat:
+    get:
+      tags:
+        - Complaints
+        - Chat
+      summary: Get complaint chat messages
+      description: Retrieve chat messages related to a specific complaint.
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the complaint.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - message_id: 123
+                  message_text: "Hello, how can we assist you?"
+                  is_pracownik: true
+                - message_id: 456
+                  message_text: "We are looking into your complaint."
+                  is_pracownik: false
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          description: The unique identifier for the order.
+        orderStatus:
+          type: string
+          description: The status of the order.
+        orderDate:
+          type: string
+          format: local-date
+          description: The date when the order was placed.
+        complaintId:
+          type: integer
+          nullable: true
+          description: The unique identifier for any associated complaint, if applicable.
+
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          description: The unique identifier for the product.
+        product_name:
+          type: string
+          description: The name of the product.
+        image_url:
+          type: string
+          description: The URL of the product image.
+        price_in_zloty:
+          type: integer
+          description: The price of the product in Polish zloty.
+    Complaint:
+      type: object
+      properties:
+        complaint_id:
+          type: integer
+          description: The unique identifier for the complaint.
+        product_name:
+          type: string
+          description: The name of the product associated with the complaint.
+        complaint_status:
+          type: string
+          description: The status of the complaint.
+        date_registered:
+          type: string
+          format: date
+          description: The date when the complaint was registered.
+    ChatMessage:
+      type: object
+      properties:
+        message_id:
+          type: integer
+          description: The unique identifier for the chat message.
+        message_text:
+          type: string
+          description: The text content of the chat message.
+        is_pracownik:
+          type: boolean
+          description: Indicates whether the message was sent by an employee (true) or a customer (false).
