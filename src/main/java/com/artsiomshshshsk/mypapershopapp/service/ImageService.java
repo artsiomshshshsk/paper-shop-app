@@ -1,5 +1,7 @@
 package com.artsiomshshshsk.mypapershopapp.service;
 
+import com.artsiomshshshsk.mypapershopapp.exception.NotFoundException;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,8 +14,10 @@ import java.util.UUID;
 
 @Service
 public record ImageService() {
+    // Save image in a local directory
 
-    public String saveImageToStorage(String uploadDirectory, MultipartFile imageFile) throws IOException {
+    @SneakyThrows
+    public String saveImageToStorage(String uploadDirectory, MultipartFile imageFile){
         String uniqueFileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
 
         Path uploadPath = Path.of(uploadDirectory);
@@ -28,7 +32,8 @@ public record ImageService() {
         return uniqueFileName;
     }
 
-
+    // To view an image
+    @SneakyThrows
     public byte[] getImage(String imageDirectory, String imageName) throws IOException {
         Path imagePath = Path.of(imageDirectory, imageName);
 
@@ -36,10 +41,11 @@ public record ImageService() {
             byte[] imageBytes = Files.readAllBytes(imagePath);
             return imageBytes;
         } else {
-            return null; // Handle missing images
+            throw new NotFoundException("Image not found"); // Handle missing images
         }
     }
 
+    // Delete an image
     public String deleteImage(String imageDirectory, String imageName) throws IOException {
         Path imagePath = Path.of(imageDirectory, imageName);
 

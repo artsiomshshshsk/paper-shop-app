@@ -18,9 +18,12 @@ public class Product {
         @Column(name = "product_name")
         private String productName;
 
-        @Column(name = "image_url")
-        private String imageUrl;
+        @Column(name = "image_id")
+        private String imageId;
+
+        @Column(name = "description")
+        private String description;
 
         @Column(name = "price")
-        private BigDecimal price;
+        private double price;
 }

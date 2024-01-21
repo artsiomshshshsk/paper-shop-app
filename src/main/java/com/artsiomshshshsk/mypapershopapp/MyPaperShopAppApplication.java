@@ -2,6 +2,7 @@ package com.artsiomshshshsk.mypapershopapp;
 
 import com.artsiomshshshsk.mypapershopapp.model.Order;
 import com.artsiomshshshsk.mypapershopapp.model.OrderStatus;
+import com.artsiomshshshsk.mypapershopapp.repository.ComplaintRepository;
 import com.artsiomshshshsk.mypapershopapp.repository.OrderRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,31 +17,26 @@ public class MyPaperShopAppApplication{
     }
 
     @Bean
-    public CommandLineRunner demo(OrderRepository repository) {
+    public CommandLineRunner demo(OrderRepository repository, ComplaintRepository complaintRepository) {
         return (args) -> {
-            repository.save(Order.builder()
-                    .orderStatus(OrderStatus.COMPLAINT_IN_PROGRESS)
+            var order1 = repository.save(Order.builder()
+                    .orderStatus(OrderStatus.WAITING_FOR_REVIEW)
                     .orderDate(java.time.LocalDate.now())
                     .price(100.0)
                     .build());
 
-            repository.save(Order.builder()
-                    .orderStatus(OrderStatus.COMPLAINT_COMPLETED)
+            var order2 = repository.save(Order.builder()
+                    .orderStatus(OrderStatus.COMPLETED)
                     .orderDate(java.time.LocalDate.now())
                     .price(200.0)
                     .build());
 
-            repository.save(Order.builder()
-                    .orderStatus(OrderStatus.COMPLAINT_CANCELLED)
+            var order3 = repository.save(Order.builder()
+                    .orderStatus(OrderStatus.IN_PROGRESS)
                     .orderDate(java.time.LocalDate.now())
                     .price(300.0)
                     .build());
 
-            repository.save(Order.builder()
-                    .orderStatus(OrderStatus.RETURN_IN_PROGRESS)
-                    .orderDate(java.time.LocalDate.now())
-                    .price(400.0)
-                    .build());
         };
     }
 

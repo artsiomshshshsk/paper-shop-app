@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "complaints")
@@ -31,6 +32,8 @@ public class Complaint {
         @JoinColumn(name = "orderId")
         private Order order;
 
+        @OneToMany(mappedBy = "complaint", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        private List<ChatMessage> messages;
 
         public Complaint(LocalDate dateRegistered, String description, Order order) {
                 this.dateRegistered = dateRegistered;
