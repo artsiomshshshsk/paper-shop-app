@@ -63,8 +63,9 @@ public record ProductService(ProductRepository productRepository, ImageService i
     }
 
     private void productImage(MultipartFile image, Product product) {
-        Optional.of(image).map(img -> {
-            if(!formatIsCorrect(Objects.requireNonNull(img.getOriginalFilename()))) {
+        Optional.ofNullable(image).map(img -> {
+            System.out.println(img + "dupa");
+            if(img.getOriginalFilename() != null && !formatIsCorrect(Objects.requireNonNull(img.getOriginalFilename()))) {
                 throw new IllegalArgumentException("Image must be in jpg, jpeg or png format");
             }
 

@@ -2,8 +2,10 @@ package com.artsiomshshshsk.mypapershopapp;
 
 import com.artsiomshshshsk.mypapershopapp.model.Order;
 import com.artsiomshshshsk.mypapershopapp.model.OrderStatus;
+import com.artsiomshshshsk.mypapershopapp.model.Product;
 import com.artsiomshshshsk.mypapershopapp.repository.ComplaintRepository;
 import com.artsiomshshshsk.mypapershopapp.repository.OrderRepository;
+import com.artsiomshshshsk.mypapershopapp.repository.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +23,7 @@ public class MyPaperShopAppApplication{
     }
 
     @Bean
-    public CommandLineRunner demo(OrderRepository repository, ComplaintRepository complaintRepository) {
+    public CommandLineRunner demo(OrderRepository repository, ComplaintRepository complaintRepository, ProductRepository productRepository) {
         return (args) -> {
             var order1 = repository.save(Order.builder()
                     .orderStatus(OrderStatus.WAITING_FOR_REVIEW)
@@ -39,6 +41,15 @@ public class MyPaperShopAppApplication{
                     .orderStatus(OrderStatus.IN_PROGRESS)
                     .orderDate(java.time.LocalDate.now())
                     .price(300.0)
+                    .build());
+
+            // make product
+
+            var product1= productRepository.save(Product.builder()
+                    .productName("product1")
+                    .description("description1")
+                    .imageId("yogurt.jpg")
+                    .price(100.0)
                     .build());
 
         };
