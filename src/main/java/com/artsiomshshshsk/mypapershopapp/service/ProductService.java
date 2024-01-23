@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public record ProductService(ProductRepository productRepository, ImageService imageService) {
 
-    private static final String URL = "https://localhost:8080";
+    private static final String URL = "http://localhost:8080";
 
 
     public ProductResponse getProductById(Long id) {

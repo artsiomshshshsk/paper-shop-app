@@ -26,7 +26,7 @@ public record ComplaintService(
         ImageService imageService,
         ChatMessageRepository chatMessageRepository) {
 
-    private static final String URL = "https://localhost:8080";
+    private static final String URL = "http://localhost:8080";
     private static final String IMAGE_DIRECTORY = "src/main/resources/static/images";
 
 
